@@ -1,12 +1,27 @@
 <script>
 export let segmentType = "empty";
 export let segmentContent = "empty";
-export let text = "";
-export let done = false;
+export let writtenText ;
+export let id ;
+export let currentId ;
+let done = false;
 
-$: if (text === segmentContent) {
-  done = true;
+
+import { createEventDispatcher } from "svelte";
+const dispatch = createEventDispatcher();
+
+  function markAsDone(content, input, id, currentId) {
+  if (id === currentId) {
+    console.log(id, currentId);
+    if (content === input && !done) {
+      done = true;
+      dispatch('done', { id, done });
+    }
+  }
 }
+
+$: markAsDone(segmentContent, writtenText);
+
 
 const typeToColorVar = {
   'Keyword': 'var(--color-keyword)',
@@ -24,9 +39,13 @@ function getColorVar(type) {
 
 <h1 style="color: {getColorVar(segmentType)};">
   {segmentContent}<br>
-{#if !done }
-  {text}
-{/if}
+  {#if !done  }
+  <h1>
+  {#if id == currentId}
+    {writtenText}
+  {/if}
+    </h1>
+  {/if}
 </h1>
 
 <style>

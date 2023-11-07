@@ -1,28 +1,41 @@
 <script>
-
-
 import * as esprima from 'esprima';
 
 import Token from './components/token.svelte'; 
 
-let text = '';
-const code = 'const answer = 42';
+let writtenText = '';
 
+const code = 'const answer = 42';
 const tokens = esprima.tokenize(code);
+let currentId = 0;
+
+
+function handleDone(e){
+  if(e.detail.done){
+    currentId++;
+    console.log(currentId);
+    writtenText = '';
+  }
+}
+
 
 
 </script>
 
+{#each tokens as token, i }
+<Token 
+    segmentType = {token.type}
+    segmentContent = {token.value}
+    {writtenText}
+    id = {i}
+    {currentId}
+    on:done={handleDone}
+  />
 
-
-<h1> MEAM </h1>
-
-{#each tokens as token}
-<Token segmentType = {token.type} segmentContent = {token.value} {text} />
 {/each}
 <br>
-<input type="text" bind:value={text}>
-<h1>{text}</h1>
+<input type="text" bind:value={writtenText}>
+<h1>{writtenText}</h1>
 
 <style>
 h1{
