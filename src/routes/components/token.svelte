@@ -6,17 +6,16 @@ export let id ;
 export let currentId ;
 let done = false;
 
+$: isActive = id === currentId;
 
 import { createEventDispatcher } from "svelte";
 const dispatch = createEventDispatcher();
 
-  function markAsDone(content, input, id, currentId) {
-  if (id === currentId) {
-    console.log(id, currentId);
-    if (content === input && !done) {
-      done = true;
-      dispatch('done', { id, done });
-    }
+function markAsDone(content, input) {
+
+  if (content === input && isActive) {
+    done = true;
+    dispatch('done', { id, done });
   }
 }
 
